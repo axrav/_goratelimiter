@@ -10,7 +10,7 @@ import (
 func main() {
 	// loading the config
 	config.Load()
-	fmt.Printf("[INFO] Starting the server on %s ", config.Get("PORT"))
+	fmt.Printf("[INFO] Starting the server on %s \n", config.Get("PORT"))
 	// starting the server in a separate goroutine
 	go server.Init()
 	fmt.Println("[INFO] The server is ready to handle requests")
