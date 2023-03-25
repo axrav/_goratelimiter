@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"strconv"
 	"sync"
 	"time"
 )
@@ -15,15 +14,10 @@ type RateLimiter struct {
 }
 
 // NewRateLimit creates a new rate limiter.
-func NewRateLimiter(rate time.Duration, burst string) *RateLimiter {
-	convBurst, err := strconv.Atoi(burst)
-	if err != nil {
-		panic("Error converting burst to int")
-	}
-
+func NewRateLimiter(rate time.Duration, burst int) *RateLimiter {
 	return &RateLimiter{
 		Rate:    rate,
-		Burst:   convBurst,
+		Burst:   burst,
 		Limiter: make(map[string]int),
 	}
 }

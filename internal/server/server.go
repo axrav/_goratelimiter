@@ -1,8 +1,8 @@
 package server
 
 import (
+	"flag"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/axrav/rate_limit/internal/config"
@@ -18,7 +18,9 @@ func Init() {
 		w.Write([]byte("Online"))
 	})
 	// implementing the rate limiter
-	rateLimiter := middleware.NewRateLimiter(time.Second, os.Args[1])
+	n := flag.Int("N", 2, "number of items to process")
+	flag.Parse()
+	rateLimiter := middleware.NewRateLimiter(time.Second, *n)
 	go rateLimiter.Initiate()
 	// implementing the middleware and the handlers for the server
 	http.Handle("/basic", middleware.RateLimitHandler(rateLimiter, http.HandlerFunc(handlers.BasicHandler)))
