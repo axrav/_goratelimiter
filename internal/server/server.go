@@ -18,7 +18,7 @@ func Init() {
 		w.Write([]byte("Online"))
 	})
 	// implementing the rate limiter
-	n := flag.Int("N", 2, "number of items to process")
+	n := flag.Int("N", 1, "Number of requests per second")
 	flag.Parse()
 	rateLimiter := middleware.NewRateLimiter(time.Second, *n)
 	go rateLimiter.Initiate()

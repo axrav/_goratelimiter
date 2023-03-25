@@ -15,8 +15,6 @@ func TestRateLimit(t *testing.T) {
 	os.Setenv("PORT", "8080")
 	// starting the server
 	go server.Init()
-	// set args for the rate limiter to 1 requests per second
-	os.Args = []string{"1", "1"}
 	// waiting for the server to start
 	time.Sleep(1 * time.Second)
 	// sending the request
