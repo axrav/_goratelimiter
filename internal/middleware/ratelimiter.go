@@ -9,7 +9,7 @@ import (
 type RateLimiter struct {
 	Rate    time.Duration
 	Burst   int
-	mutex   sync.Mutex
+	mutex   sync.RWMutex
 	Limiter map[string]int
 }
 
@@ -24,17 +24,20 @@ func NewRateLimiter(rate time.Duration, burst int) *RateLimiter {
 
 // Limit is a middleware that limits the number of requests per second from a single IP.
 func (r *RateLimiter) Limit(ip string) bool {
-	r.mutex.Lock()
-	defer r.mutex.Unlock()
-
+	r.mutex.RLock()
 	count, ok := r.Limiter[ip]
+	r.mutex.RUnlock()
 	if !ok {
+		r.mutex.Lock()
+		defer r.mutex.Unlock()
 		r.Limiter[ip] = 1
 		return true
 	}
 	if count >= r.Burst {
 		return false
 	}
+	r.mutex.Lock()
+	defer r.mutex.Unlock()
 	r.Limiter[ip]++
 	return true
 }
